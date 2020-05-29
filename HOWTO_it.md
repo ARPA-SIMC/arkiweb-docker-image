@@ -134,6 +134,12 @@ systemctl start arkiweb.service
 ```
 e con questo il container dovrebbe essere a posto.
 
+A container avviato (assumendo il nome `arkiweb`), posso "entrarci dentro" con:
+
+```
+docker exec -ti arkiweb /bin/bash
+```
+
 ### Configurazione del web server dell'host ###
 
 Assumendo che l'host abbia un web server apache già correttamente
