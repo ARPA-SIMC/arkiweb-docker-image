@@ -160,3 +160,38 @@ ProxyPassReverse "/arkiweb" "http://localhost:8080/arkiweb"
 e chiaramente riavvio il server con `systemctl restart httpd.service`.
 
 A questo punto ho di nuovo arkiweb.
+
+### Usare Singularity ###
+
+Data la scarsa esperienza con docker tutto si può replicare 
+in maniera relativamente facile con un container singularity
+che è più facile da gestire. È stato quindi creato un filr di ricetta
+singularity, con nome `Singularity`, che riproduce quanto fatto con docker.
+
+Per creare il container:
+
+```
+singularity build --sandbox arkiweb-docker.sif Singularity
+```
+
+iOmettere `--sandbox` per creare un container portabile in un
+singolo file compresso. Per farne partire un'istanza:
+
+```
+singularity instance start --writable-tmpfs \
+ -B $HOME/arkiweb-docker/config:/mnt/arkiweb \
+ -B $HOME/arkiweb-docker/httpd:/etc/httpd/conf.d \
+ --net --network-args "portmap=8080:80/tcp" \
+ arkiweb-docker-singularity arkiweb
+```
+
+l'istanza si chiama `arkiweb`, i comandi utili, con ovvio significato,
+sono:
+
+```
+singularity shell list
+singularity shell instance://arkiweb
+singularity instance stop arkiweb
+```
+
+Resta da definire come renderlo permanente al boot via systemctl.
