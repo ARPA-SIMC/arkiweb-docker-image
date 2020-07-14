@@ -17,7 +17,7 @@ UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/x86
 
 %setup
     mkdir ${SINGULARITY_ROOTFS}/tmpstorage
-    cp /etc/hosts match-alias.conf ${SINGULARITY_ROOTFS}/tmpstorage
+    cp match-alias.conf ${SINGULARITY_ROOTFS}/tmpstorage
 
 %post
     yum install -y epel-release
@@ -30,7 +30,6 @@ UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/x86
     cp /usr/share/doc/arkiweb/html/example/index.html /var/www/html/arkiweb/
 
 # copy local files
-    cp -pf /tmpstorage/hosts /etc/hosts
     cp -pf /tmpstorage/match-alias.conf /etc/arkimet/match-alias.conf
     rm -rf /tmpstorage
 
