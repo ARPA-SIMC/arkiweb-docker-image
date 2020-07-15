@@ -1,0 +1,12 @@
+[Unit]
+Description=Arkiweb container
+Requires=docker.service arkimet.service
+After=docker.service arkimet.service
+
+[Service]
+#Restart=always
+ExecStart=/usr/bin/docker start -a arkiweb
+ExecStop=/usr/bin/docker stop -t 10 arkiweb
+
+[Install] 
+WantedBy=default.target

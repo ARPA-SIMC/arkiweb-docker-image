@@ -1,0 +1,3 @@
+# example to be installed in /etc/sysconfig/arkiweb-singularity
+ARKIWEB_CONTAINER_ARGS="--writable-tmpfs -B /root/arkiweb-docker/config:/mnt/arkiweb -B /root/arkiweb-docker/httpd:/etc/httpd/conf.d --net --network-args portmap=8080:80/tcp"
+ARKIWEB_CONTAINER_IMAGE=/root/arkiweb-docker-image/arkiweb-image.sif

@@ -101,25 +101,11 @@ mio container `arkiweb` compare in `docker container ls -a`.
 ### Avvio del docker container ###
 
 Per farlo partire sul serio e far sì che si avvii automaticamente ai
-riavvii successivi, creo il file
-`/usr/lib/systemd/system/arkiweb.service` col seguente contenuto:
-
-```
-[Unit]
-Description=Arkiweb container
-Requires=docker.service arkimet.service
-After=docker.service arkimet.service
-
-[Service]
-Restart=always
-ExecStart=/usr/bin/docker start -a arkiweb
-ExecStop=/usr/bin/docker stop -t 10 arkiweb
-
-[Install]
-WantedBy=default.target
-```
-
-abilito permanentemente il servizio di cui sopra, assieme a docker:
+riavvii successivi, creo un file
+`/usr/lib/systemd/system/arkiweb.service` sulla base dell'esempio
+contenuto in (service/arkiweb-docker.service)[arkiweb-docker.service]
+e successivamente abilito permanentemente il relativo servizio,
+assieme a docker stesso:
 
 ```
 systemctl enable docker.service
@@ -161,37 +147,51 @@ e chiaramente riavvio il server con `systemctl restart httpd.service`.
 
 A questo punto ho di nuovo arkiweb.
 
-### Usare Singularity ###
+### Utilizzo di Singularity ###
 
-Data la scarsa esperienza con docker tutto si può replicare 
-in maniera relativamente facile con un container singularity
-che è più facile da gestire. È stato quindi creato un filr di ricetta
-singularity, con nome `Singularity`, che riproduce quanto fatto con docker.
+Data la scarsa esperienza con docker tutto si può replicare in maniera
+relativamente facile con un container singularity, che è più facile da
+gestire e non richiede un demone. È stato quindi creato un file di
+definizione singularity, con nome `Singularity`, che riproduce quanto
+fatto con docker.
 
-Per creare il container:
+Per creare il container eseguo:
 
 ```
-singularity build --sandbox arkiweb-docker.sif Singularity
+singularity build --sandbox arkiweb-image Singularity
 ```
 
-iOmettere `--sandbox` per creare un container portabile in un
-singolo file compresso. Per farne partire un'istanza:
+questo crea un container in un filesystem modificabile, se ometto
+`--sandbox` mi crea invece un container statico portatile in un
+singolo file compresso.
+
+Per avviare un'istanza permanente, utilizzando gli stessi file di
+configurazione creati per docker, eseguo:
 
 ```
 singularity instance start --writable-tmpfs \
  -B $HOME/arkiweb-docker/config:/mnt/arkiweb \
  -B $HOME/arkiweb-docker/httpd:/etc/httpd/conf.d \
  --net --network-args "portmap=8080:80/tcp" \
- arkiweb-docker-singularity arkiweb
+ arkiweb-image arkiweb
 ```
 
 l'istanza si chiama `arkiweb`, i comandi utili, con ovvio significato,
 sono:
 
 ```
-singularity shell list
+singularity instance list
 singularity shell instance://arkiweb
 singularity instance stop arkiweb
 ```
 
-Resta da definire come renderlo permanente al boot via systemctl.
+La configurazione della rete è molto simile quella di docker perché
+anche singularity, a partire da una versone 3.qualcosa, utilizza gli
+stessi plugin di rete "CNI" usati da docker.
+
+Se voglio rendere l'istanza permanente all'avvio del sistema, procedo,
+similmente al caso docker, installando il file
+(service/arkiweb-singularity.service) come servizio systemctl in
+`/usr/lib/systemd/system/arkiweb-singularity.service` e il relativo
+file di configurazione (service/arkiweb-singularity) in
+`/etc/sysconfig/arkiweb-singularity`.

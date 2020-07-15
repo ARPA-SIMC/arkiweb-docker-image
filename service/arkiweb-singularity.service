@@ -1,0 +1,14 @@
+[Unit]
+Description=Arkiweb container
+Requires=arkimet.service
+After=arkimet.service
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/sysconfig/arkiweb-singularity
+#Restart=always
+ExecStart=/usr/bin/singularity instance start $ARKIWEB_CONTAINER_ARGS $ARKIWEB_CONTAINER_IMAGE arkiweb
+ExecStop=/usr/bin/singularity instance stop arkiweb
+
+[Install] 
+WantedBy=default.target
