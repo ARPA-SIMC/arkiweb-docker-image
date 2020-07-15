@@ -102,21 +102,21 @@ mio container `arkiweb` compare in `docker container ls -a`.
 
 Per farlo partire sul serio e far sì che si avvii automaticamente ai
 riavvii successivi, creo un file
-`/usr/lib/systemd/system/arkiweb.service` sulla base dell'esempio
-contenuto in (service/arkiweb-docker.service)[arkiweb-docker.service]
+`/usr/lib/systemd/system/arkiweb-docker.service` sulla base dell'esempio
+contenuto in [arkiweb-docker.service](service/arkiweb-docker.service)
 e successivamente abilito permanentemente il relativo servizio,
 assieme a docker stesso:
 
 ```
 systemctl enable docker.service
-systemctl enable arkiweb.service
+systemctl enable arkiweb-docker.service
 ```
 
 li avvio a mano per la sessione corrente
 
 ```
 systemctl start docker.service
-systemctl start arkiweb.service
+systemctl start arkiweb-docker.service
 ```
 e con questo il container dovrebbe essere a posto.
 
@@ -191,7 +191,8 @@ stessi plugin di rete "CNI" usati da docker.
 
 Se voglio rendere l'istanza permanente all'avvio del sistema, procedo,
 similmente al caso docker, installando il file
-(service/arkiweb-singularity.service) come servizio systemctl in
+[arkiweb-singularity.service](service/arkiweb-singularity.service)
+come servizio systemctl in
 `/usr/lib/systemd/system/arkiweb-singularity.service` e il relativo
-file di configurazione (service/arkiweb-singularity) in
-`/etc/sysconfig/arkiweb-singularity`.
+file di configurazione [arkiweb-singularity](service/arkiweb-singularity)
+in `/etc/sysconfig/arkiweb-singularity`.
