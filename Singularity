@@ -22,7 +22,6 @@ UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/x86
 %post
     yum install -y epel-release
     yum install -y yum-plugin-ovl yum-plugin-copr
-    yum -y copr enable simc/stable
     yum -y copr enable simc/arkiweb
     yum install -y arkiweb httpd
 
