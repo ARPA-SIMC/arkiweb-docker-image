@@ -8,7 +8,6 @@ sed -i '/^tsflags=/d' /etc/yum.conf
 $yum update
 $yum install epel-release
 $yum install yum-plugin-copr
-$yum copr enable simc/stable
 $yum copr enable simc/arkiweb
 $yum install arkiweb httpd
 
